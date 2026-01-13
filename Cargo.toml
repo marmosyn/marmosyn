@@ -1,0 +1,125 @@
+[package]
+name = "marmosyn"
+version = "0.1.0"
+edition = "2021"
+description = "Unidirectional file synchronization and backup utility"
+license = "MIT"
+authors = ["MarmoSyn Contributors"]
+
+[[bin]]
+name = "marmosyn"
+path = "src/main.rs"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# HTTP server
+axum = { version = "0.8", features = ["macros"] }
+tower = { version = "0.5" }
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+# CLI
+clap = { version = "4", features = ["derive", "env", "string"] }
+
+# Serialization / configuration
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Filesystem watcher
+notify = { version = "7", features = ["macos_fsevent"] }
+notify-debouncer-full = "0.4"
+
+# Database
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+# Encryption (data files — per-job)
+chacha20poly1305 = "0.10"
+
+# Key derivation (CLI token encryption)
+argon2 = "0.5"
+
+# TLS
+rustls = { version = "0.23", features = ["ring"] }
+tokio-rustls = "0.26"
+rustls-pemfile = "2"
+webpki-roots = "0.26"
+
+# File hashing
+blake3 = "1"
+
+# Web assets embedding
+rust-embed = { version = "8", features = ["interpolate-folder-path"] }
+
+# Gitignore patterns
+globset = "0.4"
+ignore = "0.4"
+
+# Cron expression parsing
+cron = "0.13"
+
+# HTTP client (CLI → API)
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+
+# Secure password input
+rpassword = "7"
+
+# Async trait support
+async-trait = "0.1"
+
+# Error handling
+anyhow = "1"
+thiserror = "2"
+
+# Date/time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Base64 encoding (for encrypted tokens)
+base64 = "0.22"
+
+# Random number generation (nonces, etc.)
+rand = "0.8"
+
+# Directory traversal
+walkdir = "2"
+
+# Temporary files (for atomic writes)
+tempfile = "3"
+
+# Home directory detection
+dirs = "6"
+
+# Byte size parsing ("10GB", "500MB")
+bytesize = { version = "1", features = ["serde"] }
+
+# RAII-style cleanup guards (PID file removal, etc.)
+scopeguard = "1"
+
+# Human-readable duration parsing ("7d", "24h")
+humantime = "2"
+
+# Tokio utilities (codecs for binary protocol)
+tokio-util = { version = "0.7", features = ["codec", "io"] }
+bytes = "1"
+
+# Unix-specific (libc for UID detection, permissions)
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3"
+tokio-test = "0.4"
+tower = { version = "0.5", features = ["util"] }
+assert_fs = "1"
+predicates = "3"
+
+[profile.release]
+lto = true
+strip = true
+opt-level = "z"
+codegen-units = 1

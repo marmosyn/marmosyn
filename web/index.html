@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarmoSyn</title>
+    <style>
+        :root {
+            --bg: #1a1a2e;
+            --surface: #16213e;
+            --primary: #0f3460;
+            --accent: #e94560;
+            --text: #eee;
+            --text-muted: #999;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --border: #2a2a4a;
+            --radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Layout */
+        .app { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 220px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 1rem 0;
+            flex-shrink: 0;
+        }
+        .sidebar h1 {
+            font-size: 1.2rem;
+            padding: 0 1rem 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.5rem;
+        }
+        .sidebar h1 span { color: var(--accent); }
+        .sidebar nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-muted);
+            transition: background 0.15s, color 0.15s;
+        }
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background: var(--primary);
+            color: var(--text);
+            text-decoration: none;
+        }
+        .main { flex: 1; padding: 1.5rem; overflow-x: auto; }
+        .main h2 { margin-bottom: 1rem; font-size: 1.4rem; }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .card h3 { margin-bottom: 0.5rem; font-size: 1rem; }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 0.15em 0.6em;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-idle { background: var(--primary); color: var(--text); }
+        .badge-running { background: var(--warning); color: #000; }
+        .badge-watching { background: var(--success); color: #000; }
+        .badge-scheduled { background: #2196f3; color: #fff; }
+        .badge-error { background: var(--error); color: #fff; }
+        .badge-ok { background: var(--success); color: #000; }
+        .badge-offline { background: var(--text-muted); color: #000; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+        th { color: var(--text-muted); font-weight: 600; font-size: 0.85rem; }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.35rem 0.9rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: opacity 0.15s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-secondary { background: var(--primary); color: var(--text); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+
+        /* Misc */
+        .mono { font-family: "SF Mono", "Fira Code", monospace; font-size: 0.85rem; }
+        .muted { color: var(--text-muted); }
+        .mb { margin-bottom: 1rem; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .error-msg { color: var(--error); padding: 1rem; }
+        pre.log-output {
+            background: #111;
+            padding: 1rem;
+            border-radius: var(--radius);
+            overflow-x: auto;
+            font-size: 0.8rem;
+            max-height: 400px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+        .stat-value { font-size: 1.5rem; font-weight: 700; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            .app { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+            .sidebar nav { display: flex; flex-wrap: wrap; }
+            .sidebar nav a { flex: 1; text-align: center; min-width: 100px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <h1>Marmo<span>Sync</span></h1>
+            <nav id="nav">
+                <a href="#/" class="active" data-page="dashboard">Dashboard</a>
+                <a href="#/jobs" data-page="jobs">Jobs</a>
+                <a href="#/remotes" data-page="remotes">Remotes</a>
+                <a href="#/receiver" data-page="receiver">Receiver</a>
+                <a href="#/config" data-page="config">Config</a>
+                <a href="#/logs" data-page="logs">Logs</a>
+            </nav>
+        </aside>
+        <main class="main" id="content">
+            <div class="loading">Loading...</div>
+        </main>
+    </div>
+
+    <script>
+    // ── MarmoSyn Web UI ──────────────────────────────────────────────
+    // Minimal SPA — vanilla JS, no dependencies, no build step.
+
+    const API = '/api/v1';
+    let currentPage = 'dashboard';
+    let currentJobName = null;
+
+    // ── API helpers ───────────────────────────────────────────────────
+
+    async function api(path, opts = {}) {
+        try {
+            const resp = await fetch(API + path, {
+                headers: { 'Content-Type': 'application/json' },
+                ...opts,
+            });
+            if (!resp.ok) {
+                const text = await resp.text();
+                throw new Error(`HTTP ${resp.status}: ${text}`);
+            }
+            return await resp.json();
+        } catch (err) {
+            console.error('API error:', err);
+            throw err;
+        }
+    }
+
+    function formatBytes(bytes) {
+        if (bytes == null) return '—';
+        const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let i = 0;
+        let val = bytes;
+        while (val >= 1024 && i < units.length - 1) { val /= 1024; i++; }
+        return val.toFixed(i === 0 ? 0 : 1) + ' ' + units[i];
+    }
+
+    function formatTime(iso) {
+        if (!iso) return '—';
+        try {
+            const d = new Date(iso);
+            return d.toLocaleString();
+        } catch { return iso; }
+    }
+
+    function badgeFor(status) {
+        if (!status) return '<span class="badge badge-idle">unknown</span>';
+        const s = String(status).toLowerCase();
+        if (s === 'idle') return '<span class="badge badge-idle">idle</span>';
+        if (s === 'running') return '<span class="badge badge-running">running</span>';
+        if (s === 'watching') return '<span class="badge badge-watching">watching</span>';
+        if (s.startsWith('scheduled') || s === 'schedule') return '<span class="badge badge-scheduled">scheduled</span>';
+        if (s === 'error') return '<span class="badge badge-error">error</span>';
+        if (s === 'ok' || s === 'success') return '<span class="badge badge-ok">ok</span>';
+        if (s === 'offline') return '<span class="badge badge-offline">offline</span>';
+        return `<span class="badge badge-idle">${status}</span>`;
+    }
+
+    function escHtml(s) {
+        const el = document.createElement('span');
+        el.textContent = s;
+        return el.innerHTML;
+    }
+
+    // ── Pages ─────────────────────────────────────────────────────────
+
+    async function renderDashboard() {
+        let html = '<h2>Dashboard</h2>';
+
+        try {
+            const status = await api('/status');
+            html += '<div class="grid mb">';
+            html += `<div class="card"><div class="stat-value">${status.jobs_count || 0}</div><div class="stat-label">Sync Jobs</div></div>`;
+            html += `<div class="card"><div class="stat-value">${status.remotes_count || 0}</div><div class="stat-label">Remotes</div></div>`;
+            html += `<div class="card"><div class="stat-value">${status.receiver_enabled ? 'Active' : 'Disabled'}</div><div class="stat-label">Receiver</div></div>`;
+            html += '</div>';
+        } catch {
+            html += '<div class="card muted">Could not load server status.</div>';
+        }
+
+        try {
+            const jobs = await api('/jobs');
+            html += '<div class="card"><h3>Sync Jobs</h3><table><thead><tr><th>Name</th><th>Mode</th><th>Status</th><th>Last Sync</th><th>Action</th></tr></thead><tbody>';
+            if (Array.isArray(jobs) && jobs.length > 0) {
+                for (const j of jobs) {
+                    html += `<tr>
+                        <td><a href="#/jobs/${escHtml(j.name)}" onclick="showJobDetail('${escHtml(j.name)}')">${escHtml(j.name)}</a></td>
+                        <td>${escHtml(j.mode || '—')}</td>
+                        <td>${badgeFor(j.status)}</td>
+                        <td class="muted">${formatTime(j.last_sync)}</td>
+                        <td><button class="btn btn-primary" onclick="triggerSync('${escHtml(j.name)}')">Sync Now</button></td>
+                    </tr>`;
+                }
+            } else {
+                html += '<tr><td colspan="5" class="muted">No sync jobs configured.</td></tr>';
+            }
+            html += '</tbody></table></div>';
+        } catch {
+            html += '<div class="card muted">Could not load jobs.</div>';
+        }
+
+        return html;
+    }
+
+    async function renderJobs() {
+        let html = '<h2>Sync Jobs</h2>';
+        try {
+            const jobs = await api('/jobs');
+            html += '<table><thead><tr><th>Name</th><th>Source</th><th>Mode</th><th>Encrypt</th><th>Safety</th><th>Status</th><th>Last Sync</th><th></th></tr></thead><tbody>';
+            if (Array.isArray(jobs) && jobs.length > 0) {
+                for (const j of jobs) {
+                    html += `<tr>
+                        <td><a href="#/jobs/${escHtml(j.name)}" onclick="showJobDetail('${escHtml(j.name)}')">${escHtml(j.name)}</a></td>
+                        <td class="mono">${escHtml(j.source || '—')}</td>
+                        <td>${escHtml(j.mode || '—')}</td>
+                        <td>${j.encrypt ? '🔒' : '—'}</td>
+                        <td>${j.safety && j.safety.enabled ? '✓' : '—'}</td>
+                        <td>${badgeFor(j.status)}</td>
+                        <td class="muted">${formatTime(j.last_sync)}</td>
+                        <td><button class="btn btn-primary" onclick="triggerSync('${escHtml(j.name)}')">Sync</button></td>
+                    </tr>`;
+                }
+            } else {
+                html += '<tr><td colspan="8" class="muted">No sync jobs configured.</td></tr>';
+            }
+            html += '</tbody></table>';
+        } catch (e) {
+            html += `<div class="error-msg">Failed to load jobs: ${escHtml(e.message)}</div>`;
+        }
+        return html;
+    }
+
+    async function renderJobDetail(name) {
+        let html = `<div class="flex-between mb"><h2>Job: ${escHtml(name)}</h2><button class="btn btn-primary" onclick="triggerSync('${escHtml(name)}')">Sync Now</button></div>`;
+        try {
+            const j = await api(`/jobs/${encodeURIComponent(name)}`);
+            html += '<div class="grid mb">';
+            html += `<div class="card"><h3>Source</h3><div class="mono">${escHtml(j.source || '—')}</div></div>`;
+            html += `<div class="card"><h3>Mode</h3><div>${escHtml(j.mode || '—')}</div></div>`;
+            html += `<div class="card"><h3>Status</h3><div>${badgeFor(j.status)}</div></div>`;
+            html += `<div class="card"><h3>Encryption</h3><div>${j.encrypt ? 'Enabled 🔒' : 'Disabled'}</div></div>`;
+            html += '</div>';
+
+            if (j.safety) {
+                html += `<div class="card mb"><h3>Safety Backup</h3><p>Enabled: ${j.safety.enabled ? 'Yes' : 'No'}</p>`;
+                if (j.safety.retention) html += `<p>Retention: ${escHtml(j.safety.retention)}</p>`;
+                if (j.safety.max_size) html += `<p>Max Size: ${escHtml(j.safety.max_size)}</p>`;
+                if (j.safety.current_size != null) html += `<p>Current Size: ${formatBytes(j.safety.current_size)}</p>`;
+                html += '</div>';
+            }
+
+            if (j.dests && j.dests.length > 0) {
+                html += '<div class="card mb"><h3>Destinations</h3><table><thead><tr><th>Target</th><th>Type</th><th>Status</th></tr></thead><tbody>';
+                for (const d of j.dests) {
+                    html += `<tr><td class="mono">${escHtml(d.target || '—')}</td><td>${escHtml(d.type || '—')}</td><td>${badgeFor(d.status)}</td></tr>`;
+                }
+                html += '</tbody></table></div>';
+            }
+
+            html += `<div class="card mb"><h3>Last Sync</h3><p>${formatTime(j.last_sync)}</p>`;
+            if (j.last_result) html += `<p>Result: ${badgeFor(j.last_result)}</p>`;
+            if (j.files_synced != null) html += `<p>Files synced: ${j.files_synced}</p>`;
+            if (j.bytes_transferred != null) html += `<p>Bytes transferred: ${formatBytes(j.bytes_transferred)}</p>`;
+            html += '</div>';
+        } catch (e) {
+            html += `<div class="error-msg">Failed to load job detail: ${escHtml(e.message)}</div>`;
+        }
+
+        try {
+            const history = await api(`/jobs/${encodeURIComponent(name)}/history`);
+            if (Array.isArray(history) && history.length > 0) {
+                html += '<div class="card"><h3>History</h3><table><thead><tr><th>Started</th><th>Finished</th><th>Status</th><th>Files</th><th>Bytes</th></tr></thead><tbody>';
+                for (const h of history.slice(0, 20)) {
+                    html += `<tr><td class="muted">${formatTime(h.started_at)}</td><td class="muted">${formatTime(h.finished_at)}</td><td>${badgeFor(h.status)}</td><td>${h.files_synced || 0}</td><td>${formatBytes(h.bytes_transferred)}</td></tr>`;
+                }
+                html += '</tbody></table></div>';
+            }
+        } catch { /* history may not be available */ }
+
+        return html;
+    }
+
+    async function renderRemotes() {
+        let html = '<h2>Remotes</h2>';
+        try {
+            const remotes = await api('/remotes');
+            html += '<table><thead><tr><th>Name</th><th>Host</th><th>Status</th><th></th></tr></thead><tbody>';
+            if (Array.isArray(remotes) && remotes.length > 0) {
+                for (const r of remotes) {
+                    html += `<tr>
+                        <td>${escHtml(r.name)}</td>
+                        <td class="mono">${escHtml(r.host || '—')}</td>
+                        <td id="remote-status-${escHtml(r.name)}">${badgeFor(r.status || 'unknown')}</td>
+                        <td><button class="btn btn-secondary" onclick="pingRemote('${escHtml(r.name)}')">Ping</button></td>
+                    </tr>`;
+                }
+            } else {
+                html += '<tr><td colspan="4" class="muted">No remotes configured.</td></tr>';
+            }
+            html += '</tbody></table>';
+        } catch (e) {
+            html += `<div class="error-msg">Failed to load remotes: ${escHtml(e.message)}</div>`;
+        }
+        return html;
+    }
+
+    async function renderReceiver() {
+        let html = '<h2>Receiver</h2>';
+        try {
+            const recv = await api('/receiver/status');
+            html += `<div class="grid mb">`;
+            html += `<div class="card"><div class="stat-value">${recv.enabled ? 'Active' : 'Disabled'}</div><div class="stat-label">Status</div></div>`;
+            html += `<div class="card"><div class="stat-value">${recv.active_connections || 0}</div><div class="stat-label">Active Connections</div></div>`;
+            html += `<div class="card"><div class="stat-value">${recv.total_files_received || 0}</div><div class="stat-label">Files Received</div></div>`;
+            html += `<div class="card"><div class="stat-value">${formatBytes(recv.total_bytes_received)}</div><div class="stat-label">Bytes Received</div></div>`;
+            html += '</div>';
+
+            if (recv.allowed_paths && recv.allowed_paths.length > 0) {
+                html += '<div class="card"><h3>Allowed Paths</h3><table><thead><tr><th>Path</th><th>Alias</th><th>Used</th></tr></thead><tbody>';
+                for (const p of recv.allowed_paths) {
+                    html += `<tr><td class="mono">${escHtml(p.path)}</td><td>${escHtml(p.alias || '—')}</td><td>${formatBytes(p.used_bytes)}</td></tr>`;
+                }
+                html += '</tbody></table></div>';
+            }
+        } catch (e) {
+            html += `<div class="error-msg">Failed to load receiver status: ${escHtml(e.message)}</div>`;
+        }
+
+        try {
+            const conns = await api('/receiver/connections');
+            if (Array.isArray(conns) && conns.length > 0) {
+                html += '<div class="card"><h3>Active Connections</h3><table><thead><tr><th>Remote</th><th>Path</th><th>Started</th></tr></thead><tbody>';
+                for (const c of conns) {
+                    html += `<tr><td>${escHtml(c.remote || '—')}</td><td class="mono">${escHtml(c.path || '—')}</td><td class="muted">${formatTime(c.started_at)}</td></tr>`;
+                }
+                html += '</tbody></table></div>';
+            }
+        } catch { /* connections may not be available */ }
+
+        return html;
+    }
+
+    async function renderConfig() {
+        let html = '<div class="flex-between mb"><h2>Configuration</h2><button class="btn btn-secondary" onclick="reloadConfig()">Reload</button></div>';
+        try {
+            const cfg = await api('/config');
+            html += `<pre class="log-output">${escHtml(typeof cfg === 'string' ? cfg : JSON.stringify(cfg, null, 2))}</pre>`;
+        } catch (e) {
+            html += `<div class="error-msg">Failed to load config: ${escHtml(e.message)}</div>`;
+        }
+        return html;
+    }
+
+    async function renderLogs() {
+        let html = '<h2>Logs</h2>';
+        try {
+            const logs = await api('/jobs');
+            html += '<div class="card"><p class="muted">Select a job to view its log:</p><div class="mb" style="margin-top:0.5rem">';
+            if (Array.isArray(logs)) {
+                for (const j of logs) {
+                    html += `<button class="btn btn-secondary" style="margin:0.2rem" onclick="showJobLog('${escHtml(j.name)}')">${escHtml(j.name)}</button>`;
+                }
+            }
+            html += '</div></div>';
+            html += '<div id="log-output"></div>';
+        } catch (e) {
+            html += `<div class="error-msg">Failed to load jobs: ${escHtml(e.message)}</div>`;
+        }
+        return html;
+    }
+
+    // ── Actions ───────────────────────────────────────────────────────
+
+    async function triggerSync(name) {
+        try {
+            await api(`/jobs/${encodeURIComponent(name)}/sync`, { method: 'POST' });
+            navigate(currentPage);
+        } catch (e) {
+            alert('Failed to trigger sync: ' + e.message);
+        }
+    }
+
+    async function pingRemote(name) {
+        const el = document.getElementById('remote-status-' + name);
+        if (el) el.innerHTML = '<span class="muted">pinging...</span>';
+        try {
+            const res = await api(`/remotes/${encodeURIComponent(name)}/ping`);
+            if (el) el.innerHTML = badgeFor(res.status || 'ok');
+        } catch {
+            if (el) el.innerHTML = badgeFor('offline');
+        }
+    }
+
+    async function reloadConfig() {
+        try {
+            await api('/config/reload', { method: 'POST' });
+            navigate('config');
+        } catch (e) {
+            alert('Failed to reload config: ' + e.message);
+        }
+    }
+
+    async function showJobLog(name) {
+        const el = document.getElementById('log-output');
+        if (!el) return;
+        el.innerHTML = '<div class="loading">Loading log...</div>';
+        try {
+            const log = await api(`/jobs/${encodeURIComponent(name)}/log`);
+            const text = typeof log === 'string' ? log : (log.lines ? log.lines.join('\n') : JSON.stringify(log, null, 2));
+            el.innerHTML = `<div class="card"><h3>Log: ${escHtml(name)}</h3><pre class="log-output">${escHtml(text)}</pre></div>`;
+        } catch (e) {
+            el.innerHTML = `<div class="error-msg">Failed to load log: ${escHtml(e.message)}</div>`;
+        }
+    }
+
+    function showJobDetail(name) {
+        currentJobName = name;
+        currentPage = 'job-detail';
+        render();
+    }
+
+    // ── Router ────────────────────────────────────────────────────────
+
+    async function render() {
+        const content = document.getElementById('content');
+        content.innerHTML = '<div class="loading">Loading...</div>';
+
+        let html;
+        try {
+            switch (currentPage) {
+                case 'dashboard': html = await renderDashboard(); break;
+                case 'jobs': html = await renderJobs(); break;
+                case 'job-detail': html = await renderJobDetail(currentJobName); break;
+                case 'remotes': html = await renderRemotes(); break;
+                case 'receiver': html = await renderReceiver(); break;
+                case 'config': html = await renderConfig(); break;
+                case 'logs': html = await renderLogs(); break;
+                default: html = await renderDashboard();
+            }
+        } catch (e) {
+            html = `<div class="error-msg">Error loading page: ${escHtml(e.message)}</div>`;
+        }
+        content.innerHTML = html;
+    }
+
+    function navigate(page) {
+        currentPage = page;
+        currentJobName = null;
+
+        document.querySelectorAll('#nav a').forEach(a => {
+            a.classList.toggle('active', a.dataset.page === page);
+        });
+
+        render();
+    }
+
+    function handleHash() {
+        const hash = location.hash || '#/';
+        const parts = hash.replace('#/', '').split('/');
+        const page = parts[0] || 'dashboard';
+
+        if (page === 'jobs' && parts[1]) {
+            currentJobName = decodeURIComponent(parts[1]);
+            currentPage = 'job-detail';
+        } else {
+            currentPage = page;
+        }
+
+        document.querySelectorAll('#nav a').forEach(a => {
+            a.classList.toggle('active', a.dataset.page === (page === 'job-detail' ? 'jobs' : page));
+        });
+
+        render();
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────
+
+    window.addEventListener('hashchange', handleHash);
+    window.triggerSync = triggerSync;
+    window.pingRemote = pingRemote;
+    window.reloadConfig = reloadConfig;
+    window.showJobDetail = showJobDetail;
+    window.showJobLog = showJobLog;
+
+    handleHash();
+
+    // Auto-refresh every 10 seconds
+    setInterval(() => {
+        if (document.visibilityState === 'visible') render();
+    }, 10000);
+    </script>
+</body>
+</html>
