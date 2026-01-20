@@ -1,7 +1,7 @@
 [package]
 name = "marmosyn"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 description = "Unidirectional file synchronization and backup utility"
 license = "Apache-2.0"
 authors = ["Mikhail Yatsenko <mikhail.yatsenko@gmail.com>"]
