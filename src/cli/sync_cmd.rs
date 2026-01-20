@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Handler for the `sync` subcommand — triggers manual synchronization of one or all jobs.
 //!
 //! When a server is running, this command operates via the HTTP API.

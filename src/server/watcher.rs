@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Filesystem watcher service for `mode = "watch"` sync jobs.
 //!
 //! Uses the `notify` crate to subscribe to filesystem events on source directories,

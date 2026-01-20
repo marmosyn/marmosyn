@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Handler for the `login` subcommand.
 //!
 //! Prompts the user for a server URL, token, and optionally a password

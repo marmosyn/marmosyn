@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Sync plan types — describes the set of operations needed to synchronize
 //! a source file tree to a destination.
 //!

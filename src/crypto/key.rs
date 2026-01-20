@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Encryption key loading and management.
 //!
 //! Loads the data encryption key from the source specified in `[encryption].key_source`.

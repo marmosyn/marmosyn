@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! File tree and file metadata types for synchronization.
 //!
 //! [`FileTree`] represents a snapshot of a directory's contents, consisting of

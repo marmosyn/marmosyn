@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Destination router: maps dest strings to the appropriate `SyncExecutor` instances.
 //!
 //! `DestRouter` takes the parsed destinations from a sync job (via `collect_destinations`)

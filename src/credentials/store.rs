@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Credentials file storage — read/write `~/.config/marmosyn/credentials.toml`.
 //!
 //! The credentials file stores authentication tokens for connecting to MarmoSyn

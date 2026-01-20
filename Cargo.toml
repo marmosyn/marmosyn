@@ -3,8 +3,8 @@ name = "marmosyn"
 version = "0.1.0"
 edition = "2021"
 description = "Unidirectional file synchronization and backup utility"
-license = "MIT"
-authors = ["MarmoSyn Contributors"]
+license = "Apache-2.0"
+authors = ["Mikhail Yatsenko <mikhail.yatsenko@gmail.com>"]
 
 [[bin]]
 name = "marmosyn"

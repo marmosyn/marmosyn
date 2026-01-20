@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! UID detection and default path selection.
 //!
 //! Determines whether the process is running as root (UID 0) or as a regular user,

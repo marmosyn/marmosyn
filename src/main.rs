@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! MarmoSyn — unidirectional file synchronization and backup utility.
 //!
 //! A single binary that serves as a server (sender + receiver), CLI client,

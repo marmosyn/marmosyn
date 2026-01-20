@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Codec for the binary transport protocol.
 //!
 //! Implements length-prefixed frame encoding and decoding for the MarmoSyn

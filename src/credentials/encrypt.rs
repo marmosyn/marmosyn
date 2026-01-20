@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Token encryption and decryption using Argon2id + ChaCha20-Poly1305.
 //!
 //! This module provides functions to encrypt and decrypt CLI authentication tokens

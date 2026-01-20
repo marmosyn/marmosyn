@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Destination format parsing for sync job targets.
 //!
 //! Parses dest strings into [`ParsedDest`] variants (local or remote) and provides

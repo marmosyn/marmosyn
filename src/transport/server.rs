@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! TCP/TLS listener for the receiver side of the transport protocol.
 //!
 //! This module implements the server-side network listener that accepts

@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! CLI module — command-line interface definition and subcommand handlers.
 //!
 //! Uses `clap` (derive) for argument parsing. All server management

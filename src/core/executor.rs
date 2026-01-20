@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Sync executor trait, local executor, and encrypting executor implementations.
 //!
 //! The [`SyncExecutor`] trait provides an abstraction over local and remote

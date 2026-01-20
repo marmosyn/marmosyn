@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Safety backup handler: saves old file versions before overwrite/deletion.
 //!
 //! When safety backup is enabled for a sync job, the old version of a file

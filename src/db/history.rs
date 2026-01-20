@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! CRUD operations for the `sync_history` table.
 //!
 //! Records the outcome of each synchronization run: start/finish times,

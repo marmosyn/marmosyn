@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! CRUD operations for the `receiver_stats` table.
 //!
 //! Tracks statistics about files received from remote senders, including

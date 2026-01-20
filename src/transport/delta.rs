@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Delta synchronization using rolling checksums (rsync-like).
 //!
 //! This module implements the rolling checksum algorithm for efficient

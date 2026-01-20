@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Job manager — manages the lifecycle of sync jobs on the sender side.
 //!
 //! The `JobManager` is the central server component that starts, stops, and

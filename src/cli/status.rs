@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Handler for the `marmosyn status` subcommand.
 //!
 //! Queries the running server via `GET /api/v1/status` and displays

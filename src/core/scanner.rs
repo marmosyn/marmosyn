@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Recursive filesystem scanner for building file trees.
 //!
 //! Traverses a directory tree, collects metadata for each file, applies

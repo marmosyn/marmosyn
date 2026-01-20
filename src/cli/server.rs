@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Handler for the `server` subcommand — starts the MarmoSyn server process.
 //!
 //! This module bridges the CLI layer to the server daemon. It converts CLI

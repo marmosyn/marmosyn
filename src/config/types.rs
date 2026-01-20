@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Configuration types — all structs for TOML deserialization.
 //!
 //! These types represent the full MarmoSyn configuration file structure,

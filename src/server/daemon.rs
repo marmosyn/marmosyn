@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Server daemon process — startup, path selection, and graceful shutdown.
 //!
 //! This module implements the main server loop for `marmosyn server`:

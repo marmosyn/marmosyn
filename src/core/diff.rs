@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Diff computation between source and destination file trees.
 //!
 //! Compares two [`FileTree`](super::file_tree::FileTree) instances (source vs dest) and

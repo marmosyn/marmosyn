@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Receiver logic: allowed_paths validation, alias resolution, and path-traversal protection.
 //!
 //! The [`ReceiverGuard`] is responsible for validating all incoming file paths

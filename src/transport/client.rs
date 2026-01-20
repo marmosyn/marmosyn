@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! TCP/TLS client for sender → remote receiver communication.
 //!
 //! This module implements the transport client that connects to a remote

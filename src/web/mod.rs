@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Web UI module — serves embedded static files (HTML/CSS/JS) for the web interface.
 //!
 //! Uses `rust-embed` to bundle the `web/` directory into the binary at compile time.

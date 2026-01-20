@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Handler for `GET /api/v1/health` — simple healthcheck endpoint.
 //!
 //! Returns a 200 OK response with a JSON body indicating the server is running.

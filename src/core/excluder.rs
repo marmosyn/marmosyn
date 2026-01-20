@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Mikhail Yatsenko <mikhail.yatsenko@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 //! Gitignore-style pattern filtering for file exclusion.
 //!
 //! Uses `globset::GlobSet` to compile exclude patterns once at startup and
