@@ -37,7 +37,9 @@ pub enum ResolveError {
     DecryptError(#[from] encrypt::EncryptError),
 
     /// A password is required but could not be obtained.
-    #[error("password required to decrypt token but none provided: set $MARMOSYN_PASSWORD or enter interactively")]
+    #[error(
+        "password required to decrypt token but none provided: set $MARMOSYN_PASSWORD or enter interactively"
+    )]
     PasswordRequired,
 }
 

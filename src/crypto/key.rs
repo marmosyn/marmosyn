@@ -12,7 +12,7 @@
 //!
 //! The key must be exactly 256 bits (32 bytes) for use with ChaCha20-Poly1305.
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 use base64::Engine;
 
 /// The required key length in bytes for ChaCha20-Poly1305.

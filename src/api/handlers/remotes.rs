@@ -7,14 +7,14 @@
 //! - `GET /api/v1/remotes` — list all configured remote nodes
 //! - `GET /api/v1/remotes/{name}/ping` — ping a specific remote node
 
+use axum::Json;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Json;
 use tracing::{info, warn};
 
-use crate::api::models::{ErrorResponse, PingResponse, RemoteListResponse, RemoteSummary};
 use crate::api::AppState;
+use crate::api::models::{ErrorResponse, PingResponse, RemoteListResponse, RemoteSummary};
 
 /// Handler for `GET /api/v1/remotes` — list all configured remote nodes.
 ///
@@ -114,7 +114,7 @@ pub async fn ping(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::api::{create_router, AppState};
+    use crate::api::{AppState, create_router};
     use crate::config::types::{AppConfig, RemoteNode, Secret, ServerConfig};
     use crate::db::migrations;
     use crate::server::job_manager::JobManager;
@@ -123,7 +123,7 @@ mod tests {
     use std::path::PathBuf;
     use std::sync::Arc;
     use std::time::Instant;
-    use tokio::sync::{broadcast, Mutex, RwLock};
+    use tokio::sync::{Mutex, RwLock, broadcast};
     use tower::ServiceExt;
 
     fn make_state(remotes: Vec<RemoteNode>) -> AppState {

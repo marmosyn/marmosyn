@@ -10,8 +10,8 @@
 use anyhow::Result;
 
 use crate::api::models::{PingResponse, RemoteListResponse};
-use crate::cli::api_client::{format_connection_error, ApiClient};
 use crate::cli::OutputFormat;
+use crate::cli::api_client::{ApiClient, format_connection_error};
 
 /// Common options shared by all remotes subcommands.
 pub struct RemotesOptions<'a> {

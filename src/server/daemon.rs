@@ -16,7 +16,7 @@ use std::sync::Arc;
 use std::time::Instant;
 
 use anyhow::{Context, Result};
-use tokio::sync::{broadcast, Mutex, RwLock};
+use tokio::sync::{Mutex, RwLock, broadcast};
 use tracing::{debug, error, info, warn};
 
 use crate::config::loader;
@@ -128,11 +128,7 @@ fn set_directory_permissions(dir: &Path, label: &str) -> Result<()> {
 
     let is_root = crate::config::paths::is_root();
     let mode = if is_root {
-        if label == "safety" {
-            0o750
-        } else {
-            0o755
-        }
+        if label == "safety" { 0o750 } else { 0o755 }
     } else {
         0o700
     };
@@ -528,7 +524,7 @@ pub async fn run_server(opts: ServerOptions) -> Result<()> {
 async fn signal_shutdown() {
     #[cfg(unix)]
     {
-        use tokio::signal::unix::{signal, SignalKind};
+        use tokio::signal::unix::{SignalKind, signal};
 
         let mut sigterm =
             signal(SignalKind::terminate()).expect("failed to register SIGTERM handler");

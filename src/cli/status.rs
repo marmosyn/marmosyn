@@ -10,8 +10,8 @@
 use anyhow::Result;
 
 use crate::api::models::StatusResponse;
-use crate::cli::api_client::{format_connection_error, ApiClient};
 use crate::cli::OutputFormat;
+use crate::cli::api_client::{ApiClient, format_connection_error};
 
 /// Options for the status command.
 pub struct StatusOptions<'a> {

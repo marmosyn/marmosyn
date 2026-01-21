@@ -14,15 +14,15 @@ pub mod models;
 use std::sync::Arc;
 use std::time::Instant;
 
+use axum::Router;
 use axum::body::Body;
 use axum::extract::Request;
 use axum::middleware::{self, Next};
 use axum::response::Response;
 use axum::routing::{get, post};
-use axum::Router;
-use tokio::sync::broadcast;
 use tokio::sync::RwLock;
-use tracing::{debug, info_span, warn, Instrument};
+use tokio::sync::broadcast;
+use tracing::{Instrument, debug, info_span, warn};
 
 use crate::config::types::AppConfig;
 use crate::server::job_manager::JobManager;

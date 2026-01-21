@@ -6,11 +6,11 @@
 //! Returns a JSON response with server version, uptime, job count, remote count,
 //! and receiver status.
 
-use axum::extract::State;
 use axum::Json;
+use axum::extract::State;
 
-use crate::api::models::StatusResponse;
 use crate::api::AppState;
+use crate::api::models::StatusResponse;
 
 /// Handler for `GET /api/v1/status`.
 ///
@@ -36,7 +36,7 @@ pub async fn handle(State(state): State<AppState>) -> Json<StatusResponse> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::api::{create_router, AppState};
+    use crate::api::{AppState, create_router};
     use crate::config::types::{AppConfig, ReceiverConfig, Secret, ServerConfig};
     use crate::db::migrations;
     use crate::server::job_manager::JobManager;
@@ -45,7 +45,7 @@ mod tests {
     use std::path::PathBuf;
     use std::sync::Arc;
     use std::time::Instant;
-    use tokio::sync::{broadcast, Mutex, RwLock};
+    use tokio::sync::{Mutex, RwLock, broadcast};
     use tower::ServiceExt;
 
     fn make_state(sync_count: usize, remote_count: usize, receiver: bool) -> AppState {

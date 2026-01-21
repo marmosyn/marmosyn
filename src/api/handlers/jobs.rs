@@ -11,18 +11,18 @@
 //! - `GET /api/v1/jobs/{name}/history` — get job run history
 //! - `GET /api/v1/jobs/{name}/log` — get formatted log for a job
 
+use axum::Json;
 use axum::extract::{Path, Query, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Json;
 use serde::Deserialize;
 use tracing::{info, warn};
 
+use crate::api::AppState;
 use crate::api::models::{
     DestInfo, ErrorResponse, HistoryEntry, JobDetail, JobListResponse, JobLogResponse, JobSummary,
     SafetyInfo, SyncResponse,
 };
-use crate::api::AppState;
 use crate::config::dest_parser;
 use crate::server::job_manager::JobStatus;
 
@@ -346,7 +346,7 @@ pub async fn log(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::api::{create_router, AppState};
+    use crate::api::{AppState, create_router};
     use crate::config::types::{AppConfig, SafetyConfig, ServerConfig, SyncJob, SyncMode};
     use crate::db::migrations;
     use crate::server::job_manager::JobManager;
@@ -355,7 +355,7 @@ mod tests {
     use std::path::PathBuf;
     use std::sync::Arc;
     use std::time::Instant;
-    use tokio::sync::{broadcast, Mutex, RwLock};
+    use tokio::sync::{Mutex, RwLock, broadcast};
     use tower::ServiceExt;
 
     fn make_state_with_jobs() -> AppState {

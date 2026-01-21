@@ -15,8 +15,8 @@ use std::time::Duration;
 use anyhow::{Context, Result};
 use tracing::debug;
 
-use crate::cli::api_client::{ApiClient, ApiError};
 use crate::cli::OutputFormat;
+use crate::cli::api_client::{ApiClient, ApiError};
 
 /// Default polling interval for `--follow` mode (in seconds).
 const FOLLOW_POLL_INTERVAL_SECS: u64 = 3;
@@ -293,9 +293,7 @@ fn handle_api_error(job_name: &str, err: ApiError) -> Result<()> {
         }
         ApiError::Unauthorized => {
             eprintln!("Authorization failed. Check your API token.");
-            eprintln!(
-                "Use `marmosyn login` to save a token, or pass --token on the command line."
-            );
+            eprintln!("Use `marmosyn login` to save a token, or pass --token on the command line.");
         }
         _ => {
             eprintln!("Failed to retrieve logs for '{}': {}", job_name, err);

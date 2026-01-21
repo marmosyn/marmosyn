@@ -7,14 +7,14 @@
 //! - `GET /api/v1/config` — get the current configuration (sanitized, secrets redacted)
 //! - `POST /api/v1/config/reload` — reload configuration from disk
 
+use axum::Json;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Json;
 use tracing::{error, info, warn};
 
-use crate::api::models::{ConfigResponse, ErrorResponse, ReloadResponse};
 use crate::api::AppState;
+use crate::api::models::{ConfigResponse, ErrorResponse, ReloadResponse};
 use crate::config::{loader, validation};
 
 /// Handler for `GET /api/v1/config`.
@@ -276,7 +276,7 @@ fn sanitize_config(config: &crate::config::types::AppConfig) -> serde_json::Valu
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::api::{create_router, AppState};
+    use crate::api::{AppState, create_router};
     use crate::config::types::{
         AllowedPath, AppConfig, EncryptionConfig, ReceiverConfig, RemoteNode, SafetyConfig, Secret,
         ServerConfig, SyncJob, SyncMode,
@@ -288,7 +288,7 @@ mod tests {
     use std::path::PathBuf;
     use std::sync::Arc;
     use std::time::Instant;
-    use tokio::sync::{broadcast, Mutex, RwLock};
+    use tokio::sync::{Mutex, RwLock, broadcast};
     use tower::ServiceExt;
 
     fn make_state(config: AppConfig) -> AppState {
@@ -448,20 +448,22 @@ mod tests {
         // No encryption section
         assert!(resp.config.get("encryption").is_none());
         // Empty arrays
-        assert!(resp
-            .config
-            .get("remote")
-            .unwrap()
-            .as_array()
-            .unwrap()
-            .is_empty());
-        assert!(resp
-            .config
-            .get("sync")
-            .unwrap()
-            .as_array()
-            .unwrap()
-            .is_empty());
+        assert!(
+            resp.config
+                .get("remote")
+                .unwrap()
+                .as_array()
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            resp.config
+                .get("sync")
+                .unwrap()
+                .as_array()
+                .unwrap()
+                .is_empty()
+        );
     }
 
     #[tokio::test]
@@ -537,12 +539,14 @@ mod tests {
                 .unwrap(),
             "backup"
         );
-        assert!(paths[1]
-            .as_object()
-            .unwrap()
-            .get("alias")
-            .unwrap()
-            .is_null());
+        assert!(
+            paths[1]
+                .as_object()
+                .unwrap()
+                .get("alias")
+                .unwrap()
+                .is_null()
+        );
 
         // Encryption section
         let encryption = resp.config.get("encryption").unwrap().as_object().unwrap();

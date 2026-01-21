@@ -35,7 +35,7 @@
 use bytes::{Buf, BufMut, BytesMut};
 use tokio_util::codec::{Decoder, Encoder};
 
-use super::protocol::{MessageType, MAX_FRAME_SIZE};
+use super::protocol::{MAX_FRAME_SIZE, MessageType};
 
 /// Length of the frame header: 4 bytes for length + 1 byte for message type.
 const HEADER_SIZE: usize = 4;

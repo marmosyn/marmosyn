@@ -8,10 +8,10 @@
 //! The `index.html` is served for both `/` and any unmatched path to support
 //! client-side hash-based routing.
 
-use axum::http::{header, StatusCode};
+use axum::Router;
+use axum::http::{StatusCode, header};
 use axum::response::{Html, IntoResponse, Response};
 use axum::routing::get;
-use axum::Router;
 use rust_embed::Embed;
 
 /// Embedded web assets from the `web/` directory.

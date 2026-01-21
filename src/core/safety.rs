@@ -227,7 +227,7 @@ impl SafetyHandler {
                         "failed to read safety directory '{}': {}",
                         safety_dir.display(),
                         e
-                    ))
+                    ));
                 }
             };
 

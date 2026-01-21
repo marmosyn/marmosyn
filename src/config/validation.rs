@@ -10,7 +10,7 @@
 use std::collections::HashSet;
 use std::path::Path;
 
-use crate::config::dest_parser::{collect_destinations, parse_dest, ParsedDest};
+use crate::config::dest_parser::{ParsedDest, collect_destinations, parse_dest};
 use crate::config::types::{AppConfig, ReceiverConfig, SyncJob, SyncMode};
 
 /// Errors that can occur during configuration validation.

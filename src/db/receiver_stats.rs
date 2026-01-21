@@ -8,7 +8,7 @@
 
 use anyhow::{Context, Result};
 use chrono::Utc;
-use rusqlite::{params, Connection, OptionalExtension};
+use rusqlite::{Connection, OptionalExtension, params};
 use tracing::debug;
 
 /// A single row in the `receiver_stats` table.

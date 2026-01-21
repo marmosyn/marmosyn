@@ -9,16 +9,16 @@
 //!
 //! If `auth_token` is not configured (None), all requests are allowed through.
 
+use axum::Json;
 use axum::body::Body;
 use axum::extract::State;
 use axum::http::{Request, StatusCode};
 use axum::middleware::Next;
 use axum::response::{IntoResponse, Response};
-use axum::Json;
 use tracing::{debug, warn};
 
-use crate::api::models::ErrorResponse;
 use crate::api::AppState;
+use crate::api::models::ErrorResponse;
 
 /// axum middleware that validates Bearer token authorization.
 ///
@@ -90,7 +90,7 @@ fn unauthorized_response(message: &str) -> Response {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::api::{create_router, AppState};
+    use crate::api::{AppState, create_router};
     use crate::config::types::{AppConfig, Secret, ServerConfig};
     use crate::db::migrations;
     use crate::server::job_manager::JobManager;
@@ -99,7 +99,7 @@ mod tests {
     use std::path::PathBuf;
     use std::sync::Arc;
     use std::time::Instant;
-    use tokio::sync::{broadcast, Mutex, RwLock};
+    use tokio::sync::{Mutex, RwLock, broadcast};
     use tower::ServiceExt;
 
     fn make_state(auth_token: Option<&str>) -> AppState {

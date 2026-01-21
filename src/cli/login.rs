@@ -13,7 +13,7 @@ use tracing::info;
 
 use crate::credentials::encrypt::encrypt_token;
 use crate::credentials::store::{
-    default_credentials_path, load_credentials, save_credentials, CredentialEntry, CredentialsFile,
+    CredentialEntry, CredentialsFile, default_credentials_path, load_credentials, save_credentials,
 };
 
 /// Options for the login operation, typically derived from CLI arguments.

@@ -14,7 +14,7 @@ use std::time::Instant;
 
 use anyhow::{Context, Result};
 use chrono::{DateTime, Utc};
-use tokio::sync::{broadcast, Mutex, RwLock};
+use tokio::sync::{Mutex, RwLock, broadcast};
 use tokio::task::JoinHandle;
 use tracing::{debug, error, info, warn};
 

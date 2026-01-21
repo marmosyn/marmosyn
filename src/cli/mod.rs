@@ -562,8 +562,7 @@ mod tests {
 
     #[test]
     fn test_cli_global_config_flag() {
-        let cli =
-            Cli::try_parse_from(["marmosyn", "-c", "/custom/config.toml", "status"]).unwrap();
+        let cli = Cli::try_parse_from(["marmosyn", "-c", "/custom/config.toml", "status"]).unwrap();
         assert_eq!(
             cli.config.as_deref(),
             Some(std::path::Path::new("/custom/config.toml"))

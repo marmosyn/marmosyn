@@ -13,7 +13,7 @@ use std::time::Instant;
 use anyhow::{Context, Result};
 use tracing::{debug, error, info, warn};
 
-use crate::config::dest_parser::{parse_dest, ParsedDest};
+use crate::config::dest_parser::{ParsedDest, parse_dest};
 use crate::config::types::{RemoteNode, SafetyConfig};
 use crate::crypto::key::EncryptionKey;
 
@@ -636,10 +636,12 @@ mod tests {
         // One file succeeded, one failed — but we continued
         assert_eq!(result.files_synced, 1);
         assert_eq!(result.errors.len(), 1);
-        assert!(result.errors[0]
-            .rel_path
-            .to_string_lossy()
-            .contains("nonexistent"));
+        assert!(
+            result.errors[0]
+                .rel_path
+                .to_string_lossy()
+                .contains("nonexistent")
+        );
     }
 
     #[tokio::test]
@@ -781,8 +783,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_dest_router_progress_callback() {
-        use std::sync::atomic::{AtomicU64, Ordering};
         use std::sync::Arc;
+        use std::sync::atomic::{AtomicU64, Ordering};
 
         let src_dir = tempfile::tempdir().unwrap();
         let dest_dir = tempfile::tempdir().unwrap();

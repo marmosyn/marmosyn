@@ -7,11 +7,11 @@
 //! - `GET /api/v1/receiver/status` — receiver status, allowed paths, and statistics
 //! - `GET /api/v1/receiver/connections` — list active incoming connections
 
-use axum::extract::State;
 use axum::Json;
+use axum::extract::State;
 
-use crate::api::models::{AllowedPathInfo, ConnectionsResponse, ReceiverStatusResponse};
 use crate::api::AppState;
+use crate::api::models::{AllowedPathInfo, ConnectionsResponse, ReceiverStatusResponse};
 
 /// Handler for `GET /api/v1/receiver/status`.
 ///
@@ -97,7 +97,7 @@ fn load_receiver_totals(conn: &rusqlite::Connection) -> (u64, u64) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::api::{create_router, AppState};
+    use crate::api::{AppState, create_router};
     use crate::config::types::{AllowedPath, AppConfig, ReceiverConfig, Secret, ServerConfig};
     use crate::db::migrations;
     use crate::server::job_manager::JobManager;
@@ -106,7 +106,7 @@ mod tests {
     use std::path::PathBuf;
     use std::sync::Arc;
     use std::time::Instant;
-    use tokio::sync::{broadcast, Mutex, RwLock};
+    use tokio::sync::{Mutex, RwLock, broadcast};
     use tower::ServiceExt;
 
     fn make_state(receiver: Option<ReceiverConfig>) -> AppState {

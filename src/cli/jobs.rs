@@ -13,8 +13,8 @@
 use anyhow::Result;
 
 use crate::api::models::{JobDetail, JobHistoryResponse, JobListResponse, SyncResponse};
-use crate::cli::api_client::{format_connection_error, ApiClient};
 use crate::cli::OutputFormat;
+use crate::cli::api_client::{ApiClient, format_connection_error};
 
 /// Common options shared by all jobs subcommands.
 pub struct JobsOptions<'a> {

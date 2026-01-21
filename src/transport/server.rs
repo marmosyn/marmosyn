@@ -24,7 +24,7 @@ use anyhow::{Context, Result};
 
 use tokio::io::{AsyncRead, AsyncWrite};
 use tokio::net::TcpListener;
-use tokio::sync::{broadcast, RwLock};
+use tokio::sync::{RwLock, broadcast};
 use tracing::{debug, info, warn};
 
 use crate::config::types::{AppConfig, ReceiverConfig};
