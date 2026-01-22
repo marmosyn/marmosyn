@@ -291,10 +291,10 @@ impl ApiClient {
     /// Constructs the authorization headers.
     fn auth_headers(&self) -> HeaderMap {
         let mut headers = HeaderMap::new();
-        if !self.token.is_empty() {
-            if let Ok(val) = HeaderValue::from_str(&format!("Bearer {}", self.token)) {
-                headers.insert(AUTHORIZATION, val);
-            }
+        if !self.token.is_empty()
+            && let Ok(val) = HeaderValue::from_str(&format!("Bearer {}", self.token))
+        {
+            headers.insert(AUTHORIZATION, val);
         }
         headers
     }
@@ -363,10 +363,10 @@ fn resolve_server_url(explicit: Option<&str>) -> String {
         return url.trim_end_matches('/').to_string();
     }
 
-    if let Ok(url) = std::env::var("MARMOSYN_SERVER") {
-        if !url.is_empty() {
-            return url.trim_end_matches('/').to_string();
-        }
+    if let Ok(url) = std::env::var("MARMOSYN_SERVER")
+        && !url.is_empty()
+    {
+        return url.trim_end_matches('/').to_string();
     }
 
     DEFAULT_SERVER_URL.to_string()
@@ -439,7 +439,8 @@ mod tests {
     #[test]
     fn test_resolve_server_url_default() {
         // Remove env var to ensure default is used
-        std::env::remove_var("MARMOSYN_SERVER");
+        // SAFETY: single-threaded test
+        unsafe { std::env::remove_var("MARMOSYN_SERVER") };
         assert_eq!(resolve_server_url(None), DEFAULT_SERVER_URL);
     }
 

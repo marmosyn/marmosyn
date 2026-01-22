@@ -273,10 +273,8 @@ fn files_differ(src: &FileMetadata, dest: &FileMetadata, compare_by_hash: bool) 
     }
 
     // If hash comparison is enabled and both have hashes, use them.
-    if compare_by_hash {
-        if let (Some(src_hash), Some(dest_hash)) = (&src.hash, &dest.hash) {
-            return src_hash != dest_hash;
-        }
+    if compare_by_hash && let (Some(src_hash), Some(dest_hash)) = (&src.hash, &dest.hash) {
+        return src_hash != dest_hash;
     }
 
     // Fall back to mtime comparison.

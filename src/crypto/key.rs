@@ -109,10 +109,10 @@ fn load_key_from_file(path: &str) -> Result<EncryptionKey> {
     // Try interpreting the file as base64 text first
     let trimmed = String::from_utf8_lossy(&raw);
     let trimmed = trimmed.trim();
-    if let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(trimmed) {
-        if decoded.len() == KEY_LENGTH {
-            return EncryptionKey::from_bytes(&decoded);
-        }
+    if let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(trimmed)
+        && decoded.len() == KEY_LENGTH
+    {
+        return EncryptionKey::from_bytes(&decoded);
     }
 
     // Fall back to raw bytes
@@ -186,10 +186,12 @@ mod tests {
     #[test]
     fn test_load_key_from_env() {
         let b64 = make_b64_key();
-        std::env::set_var("MARMOSYN_TEST_KEY_123", &b64);
+        // SAFETY: single-threaded test
+        unsafe { std::env::set_var("MARMOSYN_TEST_KEY_123", &b64) };
         let key = load_key_from_env("MARMOSYN_TEST_KEY_123").unwrap();
         assert_eq!(key.as_bytes(), &[0xAB_u8; KEY_LENGTH]);
-        std::env::remove_var("MARMOSYN_TEST_KEY_123");
+        // SAFETY: single-threaded test
+        unsafe { std::env::remove_var("MARMOSYN_TEST_KEY_123") };
     }
 
     #[test]
@@ -241,10 +243,12 @@ mod tests {
     #[test]
     fn test_load_key_dispatch_env() {
         let b64 = make_b64_key();
-        std::env::set_var("MARMOSYN_TEST_DISPATCH_KEY", &b64);
+        // SAFETY: single-threaded test
+        unsafe { std::env::set_var("MARMOSYN_TEST_DISPATCH_KEY", &b64) };
         let key = load_key("env:MARMOSYN_TEST_DISPATCH_KEY").unwrap();
         assert_eq!(key.as_bytes(), &[0xAB_u8; KEY_LENGTH]);
-        std::env::remove_var("MARMOSYN_TEST_DISPATCH_KEY");
+        // SAFETY: single-threaded test
+        unsafe { std::env::remove_var("MARMOSYN_TEST_DISPATCH_KEY") };
     }
 
     #[test]

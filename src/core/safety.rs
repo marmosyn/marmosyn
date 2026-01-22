@@ -282,7 +282,7 @@ impl SafetyHandler {
     /// Returns the count of files and bytes removed.
     async fn remove_timestamp_dir(&self, path: &Path) -> RemoveResult {
         let path = path.to_path_buf();
-        let result = tokio::task::spawn_blocking(move || {
+        tokio::task::spawn_blocking(move || {
             let total_size = dir_total_size(&path);
             let file_count = dir_file_count(&path);
 
@@ -305,9 +305,7 @@ impl SafetyHandler {
             }
         })
         .await
-        .unwrap_or(RemoveResult { files: 0, bytes: 0 });
-
-        result
+        .unwrap_or(RemoveResult { files: 0, bytes: 0 })
     }
 }
 

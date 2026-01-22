@@ -107,15 +107,15 @@ pub fn create_server_directories(paths: &ServerPaths) -> Result<()> {
     }
 
     // Ensure PID file parent directory exists
-    if let Some(pid_parent) = paths.pid_file.parent() {
-        if !pid_parent.exists() {
-            std::fs::create_dir_all(pid_parent).with_context(|| {
-                format!(
-                    "failed to create PID file directory '{}'",
-                    pid_parent.display()
-                )
-            })?;
-        }
+    if let Some(pid_parent) = paths.pid_file.parent()
+        && !pid_parent.exists()
+    {
+        std::fs::create_dir_all(pid_parent).with_context(|| {
+            format!(
+                "failed to create PID file directory '{}'",
+                pid_parent.display()
+            )
+        })?;
     }
 
     Ok(())
@@ -164,15 +164,15 @@ pub fn write_pid_file(pid_path: &Path) -> Result<()> {
 
         let existing_pid = existing_pid.trim();
         if !existing_pid.is_empty() {
-            if let Ok(pid) = existing_pid.parse::<u32>() {
-                if is_process_running(pid) {
-                    anyhow::bail!(
-                        "another MarmoSyn server is already running (PID {}). \
-                         PID file: {}",
-                        pid,
-                        pid_path.display()
-                    );
-                }
+            if let Ok(pid) = existing_pid.parse::<u32>()
+                && is_process_running(pid)
+            {
+                anyhow::bail!(
+                    "another MarmoSyn server is already running (PID {}). \
+                     PID file: {}",
+                    pid,
+                    pid_path.display()
+                );
             }
             // Stale PID file — overwrite it
             warn!(

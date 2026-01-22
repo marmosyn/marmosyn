@@ -97,10 +97,10 @@ fn detect_log_format(cli: &Cli) -> LogFormat {
 
     // Server in daemon mode should use JSON (stdout goes to /dev/null anyway,
     // but if redirected to a file it should be structured)
-    if let Command::Server(ref args) = cli.command {
-        if args.daemon {
-            return LogFormat::Json;
-        }
+    if let Command::Server(ref args) = cli.command
+        && args.daemon
+    {
+        return LogFormat::Json;
     }
 
     // If CLI output format is JSON, use JSON logging too for consistency

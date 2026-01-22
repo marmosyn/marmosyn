@@ -97,13 +97,13 @@ pub fn resolve_token(opts: &ResolveOptions<'_>) -> Result<ResolvedToken, Resolve
     }
 
     // 2. Environment variable
-    if let Ok(token) = std::env::var("MARMOSYN_API_TOKEN") {
-        if !token.is_empty() {
-            return Ok(ResolvedToken {
-                token,
-                source: TokenSource::EnvVar,
-            });
-        }
+    if let Ok(token) = std::env::var("MARMOSYN_API_TOKEN")
+        && !token.is_empty()
+    {
+        return Ok(ResolvedToken {
+            token,
+            source: TokenSource::EnvVar,
+        });
     }
 
     // 3. Credentials file
@@ -170,10 +170,10 @@ fn decode_token_value(raw: &str) -> Result<ResolvedToken, ResolveError> {
 /// Obtains the decryption password from `$MARMOSYN_PASSWORD` or interactive prompt.
 fn obtain_password() -> Result<String, ResolveError> {
     // Try environment variable first
-    if let Ok(pw) = std::env::var("MARMOSYN_PASSWORD") {
-        if !pw.is_empty() {
-            return Ok(pw);
-        }
+    if let Ok(pw) = std::env::var("MARMOSYN_PASSWORD")
+        && !pw.is_empty()
+    {
+        return Ok(pw);
     }
 
     // Try interactive prompt (only works with a TTY)

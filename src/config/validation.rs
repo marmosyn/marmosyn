@@ -116,16 +116,15 @@ fn validate_dest_fields(
         if let ParsedDest::Remote {
             ref remote_name, ..
         } = parsed
+            && !remote_names.contains(remote_name.as_str())
         {
-            if !remote_names.contains(remote_name.as_str()) {
-                errors.push(ValidationError::Field {
-                    field: format!("{field_prefix}.dest"),
-                    message: format!(
-                        "remote '{}' referenced in dest '{}' but not defined in [[remote]]",
-                        remote_name, dest_str
-                    ),
-                });
-            }
+            errors.push(ValidationError::Field {
+                field: format!("{field_prefix}.dest"),
+                message: format!(
+                    "remote '{}' referenced in dest '{}' but not defined in [[remote]]",
+                    remote_name, dest_str
+                ),
+            });
         }
     }
 }
@@ -159,28 +158,28 @@ fn validate_safety(job: &SyncJob, field_prefix: &str, errors: &mut Vec<Validatio
         return;
     }
 
-    if let Some(ref retention) = job.safety.retention {
-        if parse_duration_str(retention).is_none() {
-            errors.push(ValidationError::Field {
-                field: format!("{field_prefix}.safety.retention"),
-                message: format!(
-                    "invalid retention format '{}'; expected e.g. '7d', '24h', '4w'",
-                    retention
-                ),
-            });
-        }
+    if let Some(ref retention) = job.safety.retention
+        && parse_duration_str(retention).is_none()
+    {
+        errors.push(ValidationError::Field {
+            field: format!("{field_prefix}.safety.retention"),
+            message: format!(
+                "invalid retention format '{}'; expected e.g. '7d', '24h', '4w'",
+                retention
+            ),
+        });
     }
 
-    if let Some(ref max_size) = job.safety.max_size {
-        if parse_size_str(max_size).is_none() {
-            errors.push(ValidationError::Field {
-                field: format!("{field_prefix}.safety.max_size"),
-                message: format!(
-                    "invalid max_size format '{}'; expected e.g. '500MB', '10GB'",
-                    max_size
-                ),
-            });
-        }
+    if let Some(ref max_size) = job.safety.max_size
+        && parse_size_str(max_size).is_none()
+    {
+        errors.push(ValidationError::Field {
+            field: format!("{field_prefix}.safety.max_size"),
+            message: format!(
+                "invalid max_size format '{}'; expected e.g. '500MB', '10GB'",
+                max_size
+            ),
+        });
     }
 }
 

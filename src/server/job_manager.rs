@@ -772,13 +772,12 @@ async fn run_sync_pipeline(
             // Fire-and-forget update (non-blocking attempt)
             tokio::spawn(async move {
                 let mut lock = jobs.write().await;
-                if let Some(state) = lock.get_mut(&name) {
-                    if let JobStatus::Running {
+                if let Some(state) = lock.get_mut(&name)
+                    && let JobStatus::Running {
                         ref mut progress, ..
                     } = state.status
-                    {
-                        *progress = p;
-                    }
+                {
+                    *progress = p;
                 }
             });
         });

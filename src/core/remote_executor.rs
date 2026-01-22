@@ -460,26 +460,26 @@ mod tests {
 
                         // Scan the dest_dir and return real entries
                         let mut entries = Vec::new();
-                        if dest_dir.exists() {
-                            if let Ok(mut read_dir) = tokio::fs::read_dir(&dest_dir).await {
-                                while let Ok(Some(entry)) = read_dir.next_entry().await {
-                                    if let Ok(meta) = entry.metadata().await {
-                                        let rel = entry.file_name().to_string_lossy().to_string();
-                                        let mtime_secs = meta
-                                            .modified()
-                                            .ok()
-                                            .and_then(|t| t.duration_since(UNIX_EPOCH).ok())
-                                            .map(|d| d.as_secs() as i64)
-                                            .unwrap_or(0);
-                                        entries.push(FileEntryPayload {
-                                            rel_path: rel,
-                                            size: meta.len(),
-                                            mtime_secs,
-                                            mtime_nanos: 0,
-                                            hash: None,
-                                            is_dir: meta.is_dir(),
-                                        });
-                                    }
+                        if dest_dir.exists()
+                            && let Ok(mut read_dir) = tokio::fs::read_dir(&dest_dir).await
+                        {
+                            while let Ok(Some(entry)) = read_dir.next_entry().await {
+                                if let Ok(meta) = entry.metadata().await {
+                                    let rel = entry.file_name().to_string_lossy().to_string();
+                                    let mtime_secs = meta
+                                        .modified()
+                                        .ok()
+                                        .and_then(|t| t.duration_since(UNIX_EPOCH).ok())
+                                        .map(|d| d.as_secs() as i64)
+                                        .unwrap_or(0);
+                                    entries.push(FileEntryPayload {
+                                        rel_path: rel,
+                                        size: meta.len(),
+                                        mtime_secs,
+                                        mtime_nanos: 0,
+                                        hash: None,
+                                        is_dir: meta.is_dir(),
+                                    });
                                 }
                             }
                         }

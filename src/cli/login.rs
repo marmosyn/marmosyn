@@ -119,10 +119,10 @@ pub fn print_login_result(result: &LoginResult) {
 /// non-interactive contexts like CI).
 fn prompt_password_twice() -> Result<String> {
     // Check environment variable first (for non-interactive use)
-    if let Ok(pw) = std::env::var("MARMOSYN_PASSWORD") {
-        if !pw.is_empty() {
-            return Ok(pw);
-        }
+    if let Ok(pw) = std::env::var("MARMOSYN_PASSWORD")
+        && !pw.is_empty()
+    {
+        return Ok(pw);
     }
 
     let password = rpassword::prompt_password("Enter password to encrypt token: ")
@@ -198,7 +198,8 @@ mod tests {
         let cred_path = dir.path().join("credentials.toml");
 
         // Set the password via environment variable for non-interactive test
-        std::env::set_var("MARMOSYN_PASSWORD", "test-password-123");
+        // SAFETY: single-threaded test
+        unsafe { std::env::set_var("MARMOSYN_PASSWORD", "test-password-123") };
 
         let opts = LoginOptions {
             server: "http://localhost:7855",
@@ -210,7 +211,8 @@ mod tests {
         let result = handle_login(&opts).unwrap();
 
         // Clean up env
-        std::env::remove_var("MARMOSYN_PASSWORD");
+        // SAFETY: single-threaded test
+        unsafe { std::env::remove_var("MARMOSYN_PASSWORD") };
 
         assert!(result.encrypted);
         assert_eq!(result.profile, "test");
