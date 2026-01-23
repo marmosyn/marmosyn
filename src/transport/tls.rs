@@ -8,11 +8,11 @@
 //! (receiver side) and the transport client (sender side) to establish
 //! encrypted connections.
 
-use std::io::BufReader;
 use std::path::Path;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
+use rustls::pki_types::pem::PemObject;
 use rustls::pki_types::{CertificateDer, PrivateKeyDer};
 use tracing::{debug, info};
 
@@ -34,11 +34,8 @@ fn ensure_crypto_provider() {
 /// Returns an error if the file cannot be read or contains no valid
 /// PEM certificates.
 pub fn load_certs(path: &Path) -> Result<Vec<CertificateDer<'static>>> {
-    let file = std::fs::File::open(path)
-        .with_context(|| format!("failed to open certificate file '{}'", path.display()))?;
-    let mut reader = BufReader::new(file);
-
-    let certs: Vec<CertificateDer<'static>> = rustls_pemfile::certs(&mut reader)
+    let certs: Vec<CertificateDer<'static>> = CertificateDer::pem_file_iter(path)
+        .with_context(|| format!("failed to open certificate file '{}'", path.display()))?
         .collect::<std::result::Result<Vec<_>, _>>()
         .with_context(|| format!("failed to parse certificates from '{}'", path.display()))?;
 
@@ -65,45 +62,20 @@ pub fn load_certs(path: &Path) -> Result<Vec<CertificateDer<'static>>> {
 /// Returns an error if the file cannot be read or contains no valid
 /// private key.
 pub fn load_private_key(path: &Path) -> Result<PrivateKeyDer<'static>> {
-    let file = std::fs::File::open(path)
-        .with_context(|| format!("failed to open private key file '{}'", path.display()))?;
-    let mut reader = BufReader::new(file);
+    // PrivateKeyDer::pem_file_iter tries PKCS1, PKCS8 and SEC1 formats.
+    let key = PrivateKeyDer::pem_file_iter(path)
+        .with_context(|| format!("failed to open private key file '{}'", path.display()))?
+        .next()
+        .ok_or_else(|| anyhow::anyhow!("no valid private key found in '{}'", path.display()))?
+        .with_context(|| format!("failed to parse key from '{}'", path.display()))?;
 
-    // Try all key formats supported by rustls-pemfile
-    loop {
-        match rustls_pemfile::read_one(&mut reader)
-            .with_context(|| format!("failed to parse key from '{}'", path.display()))?
-        {
-            Some(rustls_pemfile::Item::Pkcs1Key(key)) => {
-                debug!(
-                    path = %path.display(),
-                    "loaded PKCS1 (RSA) private key"
-                );
-                return Ok(PrivateKeyDer::Pkcs1(key));
-            }
-            Some(rustls_pemfile::Item::Pkcs8Key(key)) => {
-                debug!(
-                    path = %path.display(),
-                    "loaded PKCS8 private key"
-                );
-                return Ok(PrivateKeyDer::Pkcs8(key));
-            }
-            Some(rustls_pemfile::Item::Sec1Key(key)) => {
-                debug!(
-                    path = %path.display(),
-                    "loaded SEC1 (EC) private key"
-                );
-                return Ok(PrivateKeyDer::Sec1(key));
-            }
-            Some(_) => {
-                // Skip non-key items (e.g. certificates in the key file)
-                continue;
-            }
-            None => {
-                anyhow::bail!("no valid private key found in '{}'", path.display());
-            }
-        }
-    }
+    debug!(
+        path = %path.display(),
+        kind = ?key,
+        "loaded TLS private key"
+    );
+
+    Ok(key)
 }
 
 /// Builds a `rustls` server configuration for the transport listener.

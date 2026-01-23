@@ -32,8 +32,8 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 
 # Filesystem watcher
-notify = { version = "7", features = ["macos_fsevent"] }
-notify-debouncer-full = "0.4"
+notify = { version = "8", features = ["macos_fsevent"] }
+notify-debouncer-full = "0.7"
 
 # Database
 rusqlite = { version = "0.32", features = ["bundled"] }
@@ -47,7 +47,6 @@ argon2 = "0.5"
 # TLS
 rustls = { version = "0.23", features = ["ring"] }
 tokio-rustls = "0.26"
-rustls-pemfile = "2"
 webpki-roots = "0.26"
 
 # File hashing
