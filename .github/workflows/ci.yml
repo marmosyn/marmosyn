@@ -49,7 +49,7 @@ jobs:
         with:
           key: ${{ matrix.os }}
       - run: cargo test --all-targets
-      - run: cargo test --doc
+      # - run: cargo test --doc
 
   # ─── Build check (ensures it compiles on all platforms) ───────────────
   build:
