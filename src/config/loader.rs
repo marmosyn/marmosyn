@@ -47,13 +47,13 @@ pub enum LoadError {
 pub fn discover_config_path(explicit_path: Option<&Path>) -> Result<PathBuf, LoadError> {
     let mut searched = Vec::new();
 
-    // 1. Explicit CLI flag
+    // 1. Explicit CLI flag — if provided, do not fall through to defaults.
     if let Some(path) = explicit_path {
         let path = path.to_path_buf();
         if path.exists() {
             return Ok(path);
         }
-        searched.push(path);
+        return Err(LoadError::NotFound { paths: vec![path] });
     }
 
     // 2. Environment variable
